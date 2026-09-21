@@ -110,15 +110,35 @@ numbered sections; for each, verify its claims against what you see:
    the XML.
    ★ **Q1:** Which joints are actuated, and how can you tell from the XML
    alone?
+
+  Only the slider, in the XML it is surrounded by the actuator block; you can also tell based on the name that a slider actually involves real motoring force whereas hinges are constraints.
+
+
 2. **Observations.** Terms are functions returning `[num_envs, dim]` tensors.
    ★ **Q2:** What is the total actor observation dimension, and why is the
    pole angle 2 numbers instead of 1?
+
+  The total actor observation dimension is the sum of all the actor term dimensions, which is the sum of cart_pos, pole_angle, cart_vel and pole_vel, which evaluates to 1 + 2 + 1 + 1 = 5. 
+
+  The pole angle is given as $\sin$ and $\cos$, where $\theta$ is the current angle. Because $\theta \in [-\pi, \pi]$, sudden jumps may occur that change the value drastically. Passing in sin and cos values remove that jump.
+
 3. **Rewards.** A product of four shaped factors in [0, 1].
    ★ **Q3:** With `--agent zero` in Balance mode, roughly what reward does
    viser show, and why isn't it exactly 1.0? (Hint: reset events.)
+
+  --agent zero means that the agent takes no action, i.e. we only see how the system reacts on its own. If $x, \theta = (0,0)$ at start, 
+  - the upright reward is 1 
+  - the centered reward is slightly less than 1 due to random offsets at reset
+  - the small control reward is  1 because `control` is 0 at start.
+  - the small velocity is slightly less than 1 due to random offsets at reset
+  consequently, the reward should be approximately 1. However, the reset slider and hinge events cause the pole to be off by a small offset, which can cause velocities to emerge and result in the small control and velocity rewards to decrease. the system starts in unstable equilibrium and can quickly change. From my observation, the reward starts at 0.9977 at 16 steps and oscillates between 0.3 - 0.9 as the pole swings from 40+ steps. 
+
 4. **Events & terminations.** Temporarily change `position_range` of
    `reset_hinge` to `(-1.0, 1.0)`, rerun `play --agent zero`, watch the
    resets, then **revert your change**.
+
+
+
 5. **Registration.** Trace how `Course-Cartpole-Balance` travels from
    `hw0/__init__.py` into `list-envs` (hint: `pyproject.toml`, entry point
    `mjlab.tasks`). Your task in Step 4 appears the same way.
