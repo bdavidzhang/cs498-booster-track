@@ -66,6 +66,18 @@ def ppo_double_cfg() -> PpoRunnerCfg:
   cfg.max_iterations = _DOUBLE_ITERATIONS
   return cfg
 
+#macros / constants
+T24_STEPS = 24
+T24_ITERATIONS = STEPS_PER_EPISODE * _DOUBLE_ITERATIONS // T24_STEPS
+
+
+def ppo_double_cfg_t24() -> PpoRunnerCfg: 
+  cfg = ppo_double_cfg
+  cfg.num_steps_per_env = T24_STEPS
+  cfg.experiment_name = "hw2_ppo_t24"
+  cfg.max_iterations = T24_ITERATIONS
+  return cfg 
+
 
 register_mjlab_task(
   task_id="Course-HW2-Cartpole-Balance-Reinforce",
@@ -103,8 +115,21 @@ register_mjlab_task(
 # `Course-HW2-DoubleCartpole-Balance-PPO-T24` here: the double cartpole, your
 # PPO, rollouts of 24 steps instead of 100, and enough iterations that it sees
 # the same total environment steps as the T=100 run.
+
+register_mjlab_task(
+  task_id="Course-HW2-DoubleCartpole-Balance-PPO-T24",
+  env_cfg=cartpole_double_balance_env_cfg(),
+  play_env_cfg=cartpole_double_balance_env_cfg(play=True),
+  rl_cfg=ppo_double_cfg_t24()
+  runner_cls=ReinforceRunner,
+)
+
+
 #
 # Everything above this marker is provided; this block is yours. It runs at
 # import time like the rest of the file, so a mistake here (a typo, a duplicate
 # id) will break `uv run list-envs` for every task — run it right after you
 # write it.
+
+#should change here
+
