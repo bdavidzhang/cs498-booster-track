@@ -1,0 +1,221 @@
+Uninstalled 1 package in 34ms
+Installed 1 package in 41ms
+/u/galoiz/cs498-booster-track/course/.venv/lib/python3.13/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warp CUDA error 100: no CUDA-capable device is detected (in function init_cuda_driver, /builds/omniverse/warp/warp/native/cuda_util.cpp:333)
+wandb: WARNING `start_method` is deprecated and will be removed in a future version of wandb. This setting is currently non-functional and safely ignored.
+wandb: Tracking run with wandb version 0.28.2
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /u/galoiz/cs498-booster-track/course/wandb/offline-run-20260927_155132-e6tcsowb
+wandb: View this run in the terminal with `wandb leet`
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: WARNING Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+wandb: 
+wandb: Run history:
+wandb:       Loss/clip_frac ▅▁█
+wandb:         Loss/entropy █▄▁
+wandb:   Loss/learning_rate ▁▁▁
+wandb:          Loss/policy █▆▁
+wandb:       Loss/ratio_dev ▅▁█
+wandb:           Loss/value █▃▁
+wandb: Perf/collection_time █▁▃
+wandb:   Perf/learning_time ▁▄█
+wandb:       Perf/total_fps ▆█▁
+wandb:      Policy/mean_std █▄▁
+wandb:                   +1 ...
+wandb: 
+wandb: Run summary:
+wandb:       Loss/clip_frac 0.225
+wandb:         Loss/entropy 1.39402
+wandb:   Loss/learning_rate 0.001
+wandb:          Loss/policy -0.01633
+wandb:       Loss/ratio_dev 0.13027
+wandb:           Loss/value 0.01921
+wandb: Perf/collection_time 0.41406
+wandb:   Perf/learning_time 0.76782
+wandb:       Perf/total_fps 162
+wandb:      Policy/mean_std 0.97107
+wandb:                   +1 ...
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /u/galoiz/cs498-booster-track/course/wandb/offline-run-20260927_155132-e6tcsowb
+wandb: Find logs at: ./wandb/offline-run-20260927_155132-e6tcsowb/logs
+[INFO] Training with: device=cpu, seed=42, rank=0
+[INFO] Logging experiment in directory: /u/galoiz/cs498-booster-track/course/logs/rsl_rl/hw2_ppo/2026-09-27_15-51-31_T24
+Setting seed: 42
+Warp 1.17.0 initialized:
+   CUDA Toolkit 12.9, CUDA driver not available (NVRTC compilation available)
+   Devices:
+     "cpu"      : "aarch64"
+   Kernel cache:
+     /u/galoiz/.cache/warp/1.17.0
+
++--------------------------------+
+|        Base Environment        |
++------------------------+-------+
+| Property               | Value |
++------------------------+-------+
+| Number of environments | 8     |
+| Environment device     | cpu   |
+| Environment seed       | 42    |
+| Physics step-size      | 0.01  |
+| Environment step-size  | 0.05  |
++------------------------+-------+
+
+[INFO] <EventManager> contains 1 active terms.
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++-----------+-------------------------+
+|   Index   | Name                    |
++-----------+-------------------------+
+|     0     | reset_slider            |
+|     1     | reset_hinges            |
++-----------+-------------------------+
+
+[INFO] <NullCommandManager> (inactive)
+[INFO] <ActionManager> contains 1 active terms.
++--------------------------------+
+| Active Action Terms (shape: 1) |
++--------+---------+-------------+
+| Index  | Name    |   Dimension |
++--------+---------+-------------+
+|   0    | effort  |           1 |
++--------+---------+-------------+
+
+[INFO] <ObservationManager> contains 2 groups.
++----------------------------------------------------------+
+| Active Observation Terms in Group: 'actor' (shape: (8,)) |
++--------------+---------------------------+---------------+
+|    Index     | Name                      |     Shape     |
++--------------+---------------------------+---------------+
+|      0       | cart_pos                  |      (1,)     |
+|      1       | pole_angle                |      (4,)     |
+|      2       | cart_vel                  |      (1,)     |
+|      3       | pole_vel                  |      (2,)     |
++--------------+---------------------------+---------------+
++-----------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (8,)) |
++--------------+---------------------------+----------------+
+|    Index     | Name                      |     Shape      |
++--------------+---------------------------+----------------+
+|      0       | cart_pos                  |      (1,)      |
+|      1       | pole_angle                |      (4,)      |
+|      2       | cart_vel                  |      (1,)      |
+|      3       | pole_vel                  |      (2,)      |
++--------------+---------------------------+----------------+
+
+[INFO] <TerminationManager> contains 2 active terms.
++-----------------------------------+
+|      Active Termination Terms     |
++-------+----------------+----------+
+| Index | Name           | Time Out |
++-------+----------------+----------+
+|   0   | time_out       |   True   |
+|   1   | velocity_limit |  False   |
++-------+----------------+----------+
+
+[INFO] <RewardManager> contains 1 active terms.
++--------------------------------+
+|      Active Reward Terms       |
++-------+---------------+--------+
+| Index | Name          | Weight |
++-------+---------------+--------+
+|   0   | smooth_reward |    1.0 |
++-------+---------------+--------+
+
+[INFO] <NullCurriculumManager> (inactive)
+[INFO] <NullMetricsManager> (inactive)
+[INFO] <NullRecorderManager> (inactive)
+Module reset_data__locals__reset_xfrc_applied_c7eeecfb 347dc54 load on device 'cpu' took 12.25 ms  (cached)
+Module reset_data__locals__reset_M_d1ea7a8e 5e4b786 load on device 'cpu' took 4.40 ms  (cached)
+Module reset_data__locals__reset_mocap_b017f38a 8bee9b9 load on device 'cpu' took 4.60 ms  (cached)
+Module reset_data__locals__reset_contact_757d9bde c071611 load on device 'cpu' took 4.66 ms  (cached)
+Module reset_data__locals__reset_sleep_6b3be194 ef4d219 load on device 'cpu' took 5.47 ms  (cached)
+Module reset_data__locals__reset_nworld_e471a890 13a3ea6 load on device 'cpu' took 4.59 ms  (cached)
+Module mujoco_warp._src.smooth 5a7824c load on device 'cpu' took 6.57 ms  (cached)
+Module mujoco_warp._src.constraint 90a64f5 load on device 'cpu' took 5.01 ms  (cached)
+Module _friction_dof__locals__kernel_35a89db9 f4f563f load on device 'cpu' took 5.25 ms  (cached)
+Module _limit_slide_hinge__locals__kernel_6395e840 69f872b load on device 'cpu' took 4.38 ms  (cached)
+Module mujoco_warp._src.forward b904ce8 load on device 'cpu' took 5.68 ms  (cached)
+Module mujoco_warp._src.passive e5677c9 load on device 'cpu' took 5.22 ms  (cached)
+Module _qfrc_smooth__locals__kernel_2c4e0694 d8b266d load on device 'cpu' took 4.76 ms  (cached)
+Module mujoco_warp._src.support 79faa31 load on device 'cpu' took 4.78 ms  (cached)
+Module _small_cholesky_factorize_solve_block__locals__kernel_727722c0 ac145e6 load on device 'cpu' took 4.36 ms  (cached)
+Module _solve_init_dof__locals__kernel_618a11c7 7b5dde5 load on device 'cpu' took 4.85 ms  (cached)
+Module mujoco_warp._src.solver e441f3d load on device 'cpu' took 6.17 ms  (cached)
+Module _solve_init_jaref_kernel__locals__kernel_23b90a98 308bf0a load on device 'cpu' took 4.55 ms  (cached)
+Module mul_m_kernel__locals___mul_m_74986a16 f815dcf load on device 'cpu' took 4.80 ms  (cached)
+Module _update_constraint_efc__locals__kernel_ed085732 fbe139f load on device 'cpu' took 5.15 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_bd324b86 8b42dc5 load on device 'cpu' took 4.25 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_ada3cc5f 19a6911 load on device 'cpu' took 4.24 ms  (cached)
+Module _update_gradient_grad__locals__kernel_45d59ec9 5aa5b73 load on device 'cpu' took 4.68 ms  (cached)
+Module _update_gradient_JTDAJ_dense_tiled__locals__kernel_94097793 26a4d30 load on device 'cpu' took 4.29 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_371a4dc0 1693631 load on device 'cpu' took 4.48 ms  (cached)
+Module _linesearch_iterative_kernel__locals__kernel_8fa7dc87 2e13b87 load on device 'cpu' took 4.07 ms  (cached)
+Module _update_constraint_efc__locals__kernel_b09277e7 3fe635c load on device 'cpu' took 4.46 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_f31d3dca 87d9035 load on device 'cpu' took 4.46 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_90b73b32 766406c load on device 'cpu' took 4.07 ms  (cached)
+Module _update_gradient_grad__locals__kernel_89d63404 299c85f load on device 'cpu' took 4.54 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_94b29f89 ca30799 load on device 'cpu' took 5.46 ms  (cached)
+Module mujoco_warp._src.sensor 8b0053e load on device 'cpu' took 5.02 ms  (cached)
+Storing git diff for 'cs498-booster-track' in: /u/galoiz/cs498-booster-track/course/logs/rsl_rl/hw2_ppo/2026-09-27_15-51-31_T24/git/cs498-booster-track.diff
+Module mujoco_warp._src.derivative 65e089c load on device 'cpu' took 5.80 ms  (cached)
+Module _next_time_builder__locals___next_time_cc50a46c 7b6389c load on device 'cpu' took 4.71 ms  (cached)
+################################################################################
+[1m                             Learning iteration 0/3                             [0m 
+
+                               Run name: T24
+                            Total steps: 192 
+                       Steps per second: 175 
+                        Collection time: 0.469s 
+                          Learning time: 0.624s 
+                       Mean policy loss: -0.0064
+                        Mean value loss: 0.0956
+                      Mean entropy loss: 1.4147
+                    Mean ratio_dev loss: 0.1032
+                    Mean clip_frac loss: 0.1500
+                        Mean action std: 0.99
+--------------------------------------------------------------------------------
+                         Iteration time: 1.09s
+                           Time elapsed: 0:00:01
+                                    ETA: 0:00:02
+
+################################################################################
+[1m                             Learning iteration 1/3                             [0m 
+
+                               Run name: T24
+                            Total steps: 384 
+                       Steps per second: 179 
+                        Collection time: 0.394s 
+                          Learning time: 0.677s 
+                       Mean policy loss: -0.0092
+                        Mean value loss: 0.0359
+                      Mean entropy loss: 1.4030
+                    Mean ratio_dev loss: 0.0646
+                    Mean clip_frac loss: 0.0729
+                        Mean action std: 0.98
+--------------------------------------------------------------------------------
+                         Iteration time: 1.07s
+                           Time elapsed: 0:00:02
+                                    ETA: 0:00:01
+
+################################################################################
+[1m                             Learning iteration 2/3                             [0m 
+
+                               Run name: T24
+                            Total steps: 576 
+                       Steps per second: 162 
+                        Collection time: 0.414s 
+                          Learning time: 0.768s 
+                       Mean policy loss: -0.0163
+                        Mean value loss: 0.0192
+                      Mean entropy loss: 1.3940
+                    Mean ratio_dev loss: 0.1303
+                    Mean clip_frac loss: 0.2250
+                        Mean action std: 0.97
+--------------------------------------------------------------------------------
+                         Iteration time: 1.18s
+                           Time elapsed: 0:00:03
+                                    ETA: 0:00:00
+

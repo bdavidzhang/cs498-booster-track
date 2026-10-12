@@ -72,9 +72,10 @@ T24_ITERATIONS = STEPS_PER_EPISODE * _DOUBLE_ITERATIONS // T24_STEPS
 
 
 def ppo_double_cfg_t24() -> PpoRunnerCfg: 
-  cfg = ppo_double_cfg
+  cfg = ppo_double_cfg()
   cfg.num_steps_per_env = T24_STEPS
-  cfg.experiment_name = "hw2_ppo_t24"
+  cfg.experiment_name = "hw2_ppo"
+  cfg.run_name = "T24"
   cfg.max_iterations = T24_ITERATIONS
   return cfg 
 
@@ -120,7 +121,7 @@ register_mjlab_task(
   task_id="Course-HW2-DoubleCartpole-Balance-PPO-T24",
   env_cfg=cartpole_double_balance_env_cfg(),
   play_env_cfg=cartpole_double_balance_env_cfg(play=True),
-  rl_cfg=ppo_double_cfg_t24()
+  rl_cfg=ppo_double_cfg_t24(),
   runner_cls=ReinforceRunner,
 )
 

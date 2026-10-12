@@ -34,9 +34,7 @@ from course_tasks.hw2.storage import RolloutStorage
 class PPO:
   """
   Obejctive is 
-  $$
   L^{PPO} = -L^{CLIP} + c_v L^{V} - c_e H(\pi)
-  $$
   - the first term is the clip loss (we want to maximize) 
   - the second is the quad reconstruction loss between V(st) and the target value (how do we get this?)
   - the third term is the entropy for this distribution (how do we get this, how does this prevent sigma from decreasing?)
@@ -117,7 +115,9 @@ class PPO:
     running = torch.zeros(st.num_envs, device=st.returns.device)
 
     T = st.num_transitions_per_env
-    V_st = self.critic(last_obs)
+    with torch.no_grad():  
+      V_st = self.critic(last_obs)
+    self._last_value = V_st
     running = V_st
     for t in reversed(range(T)):
         running = st.rewards[t] + self.gamma * (1.0 - st.dones[t]) * running  
@@ -134,11 +134,16 @@ class PPO:
     st = self.storage
     if self.baseline == "value":
       T = st.num_transitions_per_env
-      advantages = st.returns.clone()
-      advantages -= st.values 
-      advantages[:T] += gamma * st.values[1:]
+      advantages = torch.zeros_like(st.rewards)
+      next_value = self._last_value
+      next_adv = torch.zeros_like(next_value)
       for t in reversed(range(T)):
-        advantages[t] += gamma * lam * advantages[t+1]
+        delta = st.rewards[t] + gamma * (1 - st.dones[t]) * next_value - st.values[t]
+        next_adv = delta + gamma * lam * (1 - st.dones[t]) * next_adv 
+        advantages[t] = next_adv
+        next_value = st.values[t]
+      # TODO: experiemntation idea
+      # st.returns = advantages + st.values
     else:
       advantages = st.returns.clone()
     if self.normalize_advantage:
@@ -146,37 +151,56 @@ class PPO:
     st.advantages = advantages
 
   def update(self) -> dict[str, float]:
-    """One full-batch gradient step. Returns losses for logging."""
-    obs, actions, _old_log_probs, returns, advantages = self.storage.flatten()
+    """
+    PPO trianing algorithm with minibatch 
+    given by arXiv:1707.06347, see algorithm 1 in section 5 
+    """    
 
-    # Re-score the stored actions under the CURRENT policy: this is the copy of
-    # log pi that carries gradients. The stored `old_log_probs` came out of
-    # inference_mode and cannot be backpropagated through.
-    log_probs, entropy = self.actor.evaluate_actions(obs, actions)
-
-    policy_loss = -(log_probs * advantages).mean()
-    entropy_loss = -entropy.mean()
-    if self.baseline == "value":
-      value_loss = F.mse_loss(self.critic(obs), returns)
-    else:
-      value_loss = torch.zeros((), device=obs.device)
-
-    loss = (
-      policy_loss
-      + self.value_loss_coef * value_loss
-      + self.entropy_coef * entropy_loss
-    )
-
-    self.optimizer.zero_grad()
-    loss.backward()
-    nn.utils.clip_grad_norm_(self.params, self.max_grad_norm)
-    self.optimizer.step()
-
-    return {
-      "policy": policy_loss.item(),
-      "value": value_loss.item(),
-      "entropy": entropy.mean().item(),
+    S = self.num_learning_epochs
+    N = self.num_mini_batches
+    tot = {
+      "policy" : 0.0,
+      "value" : 0.0,
+      "entropy" : 0.0,
+      "ratio_dev" : 0.0,
+      "clip_frac" : 0.0
     }
+    n_steps = 0
+    for obs, actions, old_log_probs, returns, advantages in self.storage.minibatch_generator(N,S):
+      # Re-score the stored actions under the CURRENT policy: this is the copy of
+      # log pi that carries gradients. The stored `old_log_probs` came out of
+      # inference_mode and cannot be backpropagated through.
+      log_probs, entropy = self.actor.evaluate_actions(obs, actions)
+      p = torch.exp(log_probs - old_log_probs)
+      policy_loss = -1 * (torch.min(p * advantages, torch.clip(p,1-self.clip_param,1+self.clip_param) * advantages)).mean()
+      entropy_loss = -entropy.mean()
+      if self.baseline == "value":
+        value_loss = F.mse_loss(self.critic(obs), returns)
+      else:
+        value_loss = torch.zeros((), device=obs.device)
+
+      self.optimizer.zero_grad()
+      loss = (
+        policy_loss
+        + self.value_loss_coef * value_loss
+        + self.entropy_coef * entropy_loss
+      )
+      loss.backward()
+      
+      self.compute_advantages()    
+      nn.utils.clip_grad_norm_(self.params, self.max_grad_norm)
+      self.optimizer.step()
+
+      tot["policy"] += policy_loss.item()
+      tot["value"] += value_loss.item()
+      tot["entropy"] += entropy.mean().item()
+      with torch.no_grad():
+        tot["ratio_dev"] += (p - 1).abs().mean().item()
+        tot["clip_frac"] += ((p - 1).abs() > self.clip_param).float().mean().item()
+      n_steps += 1
+
+    return {k : v/n_steps for k, v in tot.items()}
+
 
   # -- Plumbing. ------------------------------------------------------------
 
